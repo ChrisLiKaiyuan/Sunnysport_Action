@@ -1,0 +1,36 @@
+name: Sunnysport_Action
+
+on:
+  push:
+    branches: main
+  watch:
+    types: started
+  schedule:
+    - cron: '12 11 * * *'
+
+env:
+  UID: ${{ secrets.UID }}
+  MINSPEED: ${{ secrets.MINSPEED }}
+  MINMILEAGE: ${{ secrets.MINMILEAGE }}
+  PASS: ${{ secrets.PASS }}
+  TELEGRAM_BOTAPI: ${{ secrets.TELEGRAM_BOTAPI }}
+  TELEGRAM_USERID: ${{ secrets.TELEGRAM_USERID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set time zone
+      run: sudo timedatectl set-timezone 'Asia/Shanghai'
+    - name: Checkout codes
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: run program
+      run: |
+        python main.py
